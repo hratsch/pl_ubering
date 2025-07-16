@@ -2,19 +2,12 @@
 
 setup:
 	pip install -r requirements.txt
-	alembic init migrations  # Run once
 
 run:
 	uvicorn app.main:app --reload
 
 test:
 	pytest
-
-migrate-up:
-	alembic upgrade head
-
-migrate-down:
-	alembic downgrade -1
 
 docker-up:
 	docker-compose up -d
