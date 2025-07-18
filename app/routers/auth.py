@@ -18,9 +18,10 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     config = db.query(AppConfig).first()
     if not config:
         hashed = hash_password(request.password)
-        db.add(AppConfig(encryption_key_hash=hashed))
+        config = AppConfig(encryption_key_hash=hashed)
+        db.add(config)
         db.commit()
-        db.refresh(config)
+        db.refresh(config)  # Refresh the new config object
     if hash_password(request.password) != config.encryption_key_hash:
         raise HTTPException(401, "Invalid password")
     return TokenResponse(access_token=generate_token("single_user"))

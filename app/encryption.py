@@ -35,3 +35,12 @@ class EncryptionService:
         return aesgcm.decrypt(nonce, ct, None).decode()
 
     # Add encrypt/decrypt_float for decimals
+    def encrypt_float64(self, value: float) -> str:
+        if value is None:
+            return ""
+        return self.encrypt(str(value))
+
+    def decrypt_float64(self, ciphertext: str) -> float:
+        if not ciphertext:
+            return 0.0
+        return float(self.decrypt(ciphertext))
