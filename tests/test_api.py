@@ -33,3 +33,11 @@ def test_create_expense():
     response = client.post("/api/expenses/", json={"date": "2025-07-14", "category": "maintenance", "amount": 50.0}, headers=headers)
     assert response.status_code == 200
     assert "id" in response.json()
+
+def test_generate_report():
+    login = client.post("/api/auth/login", json={"password": "test"})
+    token = login.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+    response = client.get("/api/reports/pl/pdf", headers=headers)
+    assert response.status_code == 200
+    assert "path" in response.json()

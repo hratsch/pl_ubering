@@ -20,11 +20,15 @@ def to_response(db_expense: Expense) -> ExpenseResponse:
     )
 
 def create_expense(db: Session, expense: ExpenseCreate):
+    if expense.amount < 0:
+        raise HTTPException(400, "Amount cannot be negative")
+    if expense.category not in ['maintenance', 'insurance', 'phone', 'other']:
+        raise HTTPException(400, "Invalid category")
     db_expense = Expense(
-        date=expense.date,
-        category=expense.category,
-        amount_encrypted=enc_service.encrypt_float64(expense.amount),
-        description_encrypted=enc_service.encrypt(expense.description) if expense.description else ""
+    date=expense.date,
+    category=expense.category,
+    amount_encrypted=enc_service.encrypt_float64(expense.amount),
+    description_encrypted=enc_service.encrypt(expense.description) if expense.description else ""
     )
     db.add(db_expense)
     db.commit()
@@ -32,6 +36,10 @@ def create_expense(db: Session, expense: ExpenseCreate):
     return to_response(db_expense)
 
 def update_expense(db: Session, expense_id: int, expense: ExpenseCreate):
+    if expense.amount < 0:
+        raise HTTPException(400, "Amount cannot be negative")
+    if expense.category not in ['maintenance', 'insurance', 'phone', 'other']:
+        raise HTTPException(400, "Invalid category")
     db_expense = db.query(Expense).filter(Expense.id == expense_id).first()
     if not db_expense:
         raise HTTPException(404, "Expense not found")

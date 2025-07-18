@@ -22,6 +22,12 @@ def to_response(db_trip: Trip) -> TripResponse:
     )
 
 def create_trip(db: Session, trip: TripCreate):
+    if trip.gross_earnings < 0 or (trip.gas_cost and trip.gas_cost < 0) or (trip.tolls and trip.tolls < 0):
+        raise HTTPException(400, "Financial values cannot be negative")
+    if trip.miles_driven is not None and trip.miles_driven < 0:
+        raise HTTPException(400, "Miles driven cannot be negative")
+    if trip.hours_worked is not None and trip.hours_worked < 0:
+        raise HTTPException(400, "Hours worked cannot be negative")
     db_trip = Trip(
         date=trip.date,
         gross_earnings_encrypted=enc_service.encrypt_float64(trip.gross_earnings),
@@ -36,6 +42,12 @@ def create_trip(db: Session, trip: TripCreate):
     return to_response(db_trip)
 
 def update_trip(db: Session, trip_id: int, trip: TripCreate):
+    if trip.gross_earnings < 0 or (trip.gas_cost and trip.gas_cost < 0) or (trip.tolls and trip.tolls < 0):
+        raise HTTPException(400, "Financial values cannot be negative")
+    if trip.miles_driven is not None and trip.miles_driven < 0:
+        raise HTTPException(400, "Miles driven cannot be negative")
+    if trip.hours_worked is not None and trip.hours_worked < 0:
+        raise HTTPException(400, "Hours worked cannot be negative")
     db_trip = db.query(Trip).filter(Trip.id == trip_id).first()
     if not db_trip:
         raise HTTPException(404, "Trip not found")
