@@ -8,6 +8,9 @@ engine = create_engine(config.DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+if config.ENVIRONMENT == "production" and "change-this" in config.JWT_SECRET:
+    raise ValueError("Update JWT_SECRET for production")
+
 def get_db():
     db = SessionLocal()
     try:

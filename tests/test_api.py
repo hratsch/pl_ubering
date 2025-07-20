@@ -41,3 +41,19 @@ def test_generate_report():
     response = client.get("/api/reports/pl/pdf", headers=headers)
     assert response.status_code == 200
     assert "path" in response.json()
+
+def test_get_pl_summary():
+    login = client.post("/api/auth/login", json={"password": "test"})
+    token = login.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+    response = client.get("/api/reports/summary", headers=headers)
+    assert response.status_code == 200
+    assert "profit" in response.json()
+
+def test_get_chart_data():
+    login = client.post("/api/auth/login", json={"password": "test"})
+    token = login.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+    response = client.get("/api/reports/chart-data", headers=headers)
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)

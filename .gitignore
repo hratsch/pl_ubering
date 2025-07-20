@@ -46,3 +46,5 @@ test_db_connection.py
 # OS-specific
 Thumbs.db
 ehthumbs.db
+
+docker-compose.yml

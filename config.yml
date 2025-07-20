@@ -1,0 +1,6 @@
+tunnel: uberpl-tunnel
+credentials-file: /home/hugh/.cloudflared/81a60ab9-823f-4625-9173-6bde255a4ed1.json  # Replace <UUID> with your tunnel UUID from step 2
+ingress:
+  - hostname: qcosyycifpemilbatncwgqgk.rtunl.app  # Replace with your subdomain
+    service: http://localhost:8000
+  - service: http_status:404  # Catch-all for unknown paths

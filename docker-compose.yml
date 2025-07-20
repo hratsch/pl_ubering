@@ -6,10 +6,9 @@ services:
       POSTGRES_DB: uberpl_db
       POSTGRES_USER: hugh
       POSTGRES_PASSWORD: december90
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "hugh"]
       interval: 10s
@@ -17,15 +16,15 @@ services:
 
   app:
     build: .
-    ports:
-      - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://uberpl_user:yourpassword@postgres:5432/uberpl_db
-      JWT_SECRET: your-super-secret-jwt-key-change-this-in-production
-      ENCRYPTION_PASSWORD: your-encryption-password
+      DATABASE_URL: postgresql://hugh:december90@postgres:5432/uberpl_db
+      JWT_SECRET: a6nPkt99rpQ+/YwQyLWOE4Ld9RoRbY5iQsHr/psqAZY=
+      ENCRYPTION_PASSWORD: 4O+pMoMhQp9YzmINpnNwHKM+MxsG/dmny+SFxR7Pu2xVvSCidZD2lCaw==
+      ENVIRONMENT: production
+    # No ports: - "8000:8000" — tunnel accesses localhost:8000 on host
 
 volumes:
   postgres_data:
