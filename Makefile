@@ -1,4 +1,4 @@
-.PHONY: setup run test migrate-up migrate-down docker-up docker-down
+.PHONY: setup run test docker-up docker-down lint backup
 
 setup:
 	pip install -r requirements.txt
@@ -10,10 +10,16 @@ test:
 	pytest
 
 docker-up:
-	docker-compose up -d
+	docker compose up -d --build
 
 docker-down:
-	docker-compose down
+	docker compose down
 
 lint:
 	black . && isort .
+
+backup:
+	docker exec postgres pg_dump uberpl_db > backups/db_$(date +%Y%m%d).sql
+
+tunnel:
+	cloudflared tunnel --config config.yml run uberpl-tunnel &
