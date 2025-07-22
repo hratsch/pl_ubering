@@ -1,4 +1,4 @@
-.PHONY: setup run test docker-up docker-down lint backup
+.PHONY: setup run test docker-up docker-down lint backup tunnel
 
 setup:
 	pip install -r requirements.txt
